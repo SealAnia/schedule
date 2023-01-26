@@ -2,7 +2,6 @@ package com.example.schedule.controller;
 
 import com.example.schedule.model.entity.Employee;
 import com.example.schedule.model.entity.WorkingDay;
-import com.example.schedule.model.repository.WorkingDayRepository;
 import com.example.schedule.service.WorkingDayService;
 import com.example.schedule.service.impl.EmployeeServiceImpl;
 
@@ -76,10 +75,33 @@ public class EmployeeController {
 		modelAndView.setViewName("employee_info");
 		modelAndView.addObject("employee", employee);
 		modelAndView.addObject("days", workingDayService.getAll());
-        //Date date = workingDayService.getById(dayId).getDate();
-        //String format = "yyyy.MM.dd";
-        //modelAndView.addObject("dateF", String.format(String.valueOf(date)));
 		return modelAndView;
 	}
+
+    @GetMapping(value = "/searchform")
+    public ModelAndView showSearchForm() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("search_form");
+        return modelAndView;
+    }
+    
+    @GetMapping(value = "/employees/days_in_month")
+    public ModelAndView getDaysForEmployee(@RequestParam(value = "date", required = false) String date,
+                                           @RequestParam(value = "employeeId", required = false) Long employeeId) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("days_employees");
+
+        var daysForEmployee = employeeService.countDays(date, employeeId);
+        modelAndView.addObject("days_employees", daysForEmployee);
+
+        Employee employee = employeeService.getById(employeeId);
+        modelAndView.addObject("employee", employee);
+
+        var totalDays = daysForEmployee.size();
+        modelAndView.addObject("totalDays", totalDays);
+
+        return modelAndView;
+    }
     
 }
