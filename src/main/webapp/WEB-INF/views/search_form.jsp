@@ -9,14 +9,14 @@
 <meta charset="ISO-8859-1">
 <title>SEARCHFORM</title>
 </head>
-<body
+<body>
 
-    <form action = "/employees/days_in_month" method = "get">
-    		<p><input type="text" name = "date" placeholder = "input date">
+	<form action = "employees/days_in_month/" method = "get">
+			<p><input type="text" name = "date" placeholder = "input date">
     		<input type="number" name = "employeeId" placeholder = "input employee id">
             <input type="submit" value="SEARCH">
             </p>
-    </form>
+		</form>
 
 </body>
 </head>

@@ -3,6 +3,8 @@ package com.example.schedule.model.entity;
 //import lombok.Getter;
 //import lombok.Setter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -32,6 +34,7 @@ public class Employee {
     @JoinTable(name = "employees_days",
             joinColumns = @JoinColumn(name = "employee_id"),
     inverseJoinColumns = @JoinColumn(name = "day_id"))
+	@JsonIgnore
     private List<WorkingDay> workingDays;
 
     public Employee() {

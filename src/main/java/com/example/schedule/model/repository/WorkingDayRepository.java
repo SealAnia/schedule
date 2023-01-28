@@ -13,13 +13,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WorkingDayRepository extends JpaRepository<WorkingDay, Long> {
 
-	@Query(value = "SELECT * FROM working_day w INNER JOIN \r\n"
+	@Query(value = "SELECT w.day_id, w.date, e.employee_id FROM working_day w INNER JOIN \r\n"
 			+ "employees_days e ON \r\n"
 			+ "w.day_id = e.day_id\r\n"
 			+ "WHERE w.date LIKE %:date% AND e.employee_id LIKE %:employeeId%", nativeQuery = true)
-			//+ "WHERE w.date LIKE %2023-01% AND e.employee_id = '1'", nativeQuery = true)
-	//List<WorkingDay> searchDaysForMonth(@Param("date") Date date, @Param("employee_id") Long employeeId);
+	//@Query(value = "SELECT date, employee_id FROM schedule.working_day INNER JOIN \n" +
+			//"schedule.employees_days ON \n" +
+			//"schedule.working_day.day_id = schedule.employees_days.day_id\n" +
+			//"WHERE date LIKE '%2023-01%' AND employee_id = '1';", nativeQuery = true)
 	List<WorkingDay> searchDaysForMonth(@Param("date") String date, @Param("employeeId") Long employeeId);
-	//List<WorkingDay> searchDaysForMonth(@Param("date") String date, @Param("employeeId") String employeeId);
 
 }

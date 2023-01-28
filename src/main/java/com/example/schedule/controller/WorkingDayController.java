@@ -1,5 +1,6 @@
 package com.example.schedule.controller;
 
+import com.example.schedule.model.entity.Employee;
 import com.example.schedule.model.entity.WorkingDay;
 import com.example.schedule.model.repository.EmployeeRepository;
 import com.example.schedule.service.impl.WorkingDayServiceImpl;
@@ -15,13 +16,11 @@ import java.util.Optional;
 public class WorkingDayController {
 
     private final WorkingDayServiceImpl workingDayService;
-    //private final WorkingDayRepository workingDayRepository;
     private final EmployeeRepository employeeRepository;
 
     @Autowired
     public WorkingDayController(WorkingDayServiceImpl workingDayService, EmployeeRepository employeeRepository) {
         this.workingDayService = workingDayService;
-        //this.workingDayRepository = workingDayRepository;
         this.employeeRepository = employeeRepository;
     }
 
@@ -35,22 +34,16 @@ public class WorkingDayController {
         return workingDayService.getById(dayId);
     }
 
+    @GetMapping(value = "/{day_id}/employees")
+    public List<Employee> employeesForDay(@PathVariable Long day_id) {
+        WorkingDay day = workingDayService.getById(day_id);
+        List<Employee> employeesForDay = day.getEmployees();
+        return employeesForDay;
+    }
+
     @PostMapping(value = "/")
     public void addNewWorkingDay(@RequestBody WorkingDay workingDay) {
         workingDayService.addNewOrUpdate(workingDay);
-    }
-
-    @PutMapping(value = "/{dayId}")
-    public ResponseEntity<WorkingDay> editDayInfo(@PathVariable Long dayId, @RequestBody WorkingDay workingDay) {
-        WorkingDay updatedWorkingDay = workingDayService.getById(dayId);
-        updatedWorkingDay.setDate(workingDay.getDate());
-        workingDayService.addNewOrUpdate(updatedWorkingDay);
-        return ResponseEntity.ok(updatedWorkingDay);
-    }
-
-    @DeleteMapping(value = "/{dayId}")
-    public void deleteWorkingDay(@PathVariable Long dayId) {
-        workingDayService.delete(dayId);
     }
 
     @PostMapping(value = "/employees/{employeeId}/days")
@@ -68,6 +61,19 @@ public class WorkingDayController {
             return workingDayService.addNewOrUpdate(dayReq);
         });
         return new ResponseEntity(day, HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "/{dayId}")
+    public ResponseEntity<WorkingDay> editDayInfo(@PathVariable Long dayId, @RequestBody WorkingDay workingDay) {
+        WorkingDay updatedWorkingDay = workingDayService.getById(dayId);
+        updatedWorkingDay.setDate(workingDay.getDate());
+        workingDayService.addNewOrUpdate(updatedWorkingDay);
+        return ResponseEntity.ok(updatedWorkingDay);
+    }
+
+    @DeleteMapping(value = "/{dayId}")
+    public void deleteWorkingDay(@PathVariable Long dayId) {
+        workingDayService.delete(dayId);
     }
 
 }

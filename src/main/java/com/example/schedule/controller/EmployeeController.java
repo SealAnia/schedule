@@ -25,6 +25,8 @@ public class EmployeeController {
         this.employeeService = employeeService;
         this.workingDayService = workingDayService;
     }
+    
+    //FOR POSTMAN
 
     @GetMapping(value = "")
     public List<Employee> findAllEmployees() {
@@ -34,6 +36,18 @@ public class EmployeeController {
     @GetMapping(value = "/{employeeId}")
     public Employee findEmployeeById(@PathVariable Long employeeId) {
         return employeeService.getById(employeeId);
+    }
+
+    @GetMapping(value = "/{employee_id}/working_days")
+    public List<WorkingDay> getAllWorkingDaysForEmployee(@PathVariable Long employee_id) {
+        var employee = employeeService.getById(employee_id);
+        return employee.getWorkingDays();
+    }
+
+    @GetMapping(value = "/days_in_month")
+    public List<WorkingDay> getDaysForEmployee2(@RequestParam(value = "date", required = false) String date,
+                                               @RequestParam(value = "employeeId", required = false) Long employeeId) {
+        return employeeService.countDays(date, employeeId);
     }
 
     @PostMapping(value = "/")
@@ -53,6 +67,8 @@ public class EmployeeController {
     public void deleteEmployee(@PathVariable Long employeeId) {
         employeeService.delete(employeeId);
     }
+    
+    //FOR MODEL AND VIEW
     
     @GetMapping(value = "/edit/{employeeId}")
 	public ModelAndView showDaysAndHoursForm(@PathVariable Long employeeId, @ModelAttribute(name = "newEmployee") Employee newEmployee) {
@@ -77,15 +93,15 @@ public class EmployeeController {
 		modelAndView.addObject("days", workingDayService.getAll());
 		return modelAndView;
 	}
-
-    @GetMapping(value = "/searchform")
-    public ModelAndView showSearchForm() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("search_form");
-        return modelAndView;
-    }
     
-    @GetMapping(value = "/employees/days_in_month")
+    @GetMapping(value = "/searchform")
+    	public ModelAndView showSearchForm() {
+    	ModelAndView modelAndView = new ModelAndView();
+    	modelAndView.setViewName("search_form");
+    	return modelAndView;
+    }
+
+    @GetMapping(value = "/employees/days_in_month/")
     public ModelAndView getDaysForEmployee(@RequestParam(value = "date", required = false) String date,
                                            @RequestParam(value = "employeeId", required = false) Long employeeId) {
 

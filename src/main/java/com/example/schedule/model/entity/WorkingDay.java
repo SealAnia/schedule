@@ -29,7 +29,7 @@ public class WorkingDay {
     private Date date;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},mappedBy = "workingDays")
-    @JsonIgnore
+    //@JsonIgnore
     private List<Employee> employees;
 
     public WorkingDay() {
