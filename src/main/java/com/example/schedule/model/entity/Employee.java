@@ -1,7 +1,7 @@
 package com.example.schedule.model.entity;
 
-//import lombok.Getter;
-//import lombok.Setter;
+import lombok.Getter;
+import lombok.Setter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,8 +20,8 @@ import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name = "employee")
-//@Getter
-//@Setter
+@Getter
+@Setter
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,28 +45,4 @@ public class Employee {
         day.getEmployees().add(this);
     }
 
-	public Long getEmployeeId() {
-		return employeeId;
-	}
-
-	public void setEmployeeId(Long employeeId) {
-		this.employeeId = employeeId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public List<WorkingDay> getWorkingDays() {
-		return workingDays;
-	}
-
-	public void setWorkingDays(List<WorkingDay> workingDays) {
-		this.workingDays = workingDays;
-	}
-	
 }
