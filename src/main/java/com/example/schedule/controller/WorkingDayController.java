@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -28,19 +30,35 @@ public class WorkingDayController {
     public List<WorkingDay> findAllDays() {
         return workingDayService.getAll();
     }
-
+    
     @GetMapping(value = "/{dayId}")
     public WorkingDay findWorkingDayById(@PathVariable Long dayId) {
         return workingDayService.getById(dayId);
     }
-
+    
+    //RETURNS ALL EMPLOYEES WHO WERE WORKING ON A CERTAIN DAY
     @GetMapping(value = "/{day_id}/employees")
     public List<Employee> employeesForDay(@PathVariable Long day_id) {
         WorkingDay day = workingDayService.getById(day_id);
         List<Employee> employeesForDay = day.getEmployees();
         return employeesForDay;
     }
-
+    
+    //RETURNS ALL DAYS WHEN A CERTAIN EMPLOYEE WAS WORKING WITHIN A MONTH
+    @GetMapping(value = "/days_in_month")
+    public List<WorkingDay> getDaysForEmployee2(@RequestParam(value = "date", required = false) String date,
+                                               @RequestParam(value = "employeeId", required = false) Long employeeId) {
+        return workingDayService.searchDaysForMonth(date, employeeId);
+    }
+    
+    //RETURNS WHEN AN EMPLOYEE WAS WORKING WITHIN A CERTAIN PERIOD
+    @GetMapping(value = "/days_for_period")
+    public List<WorkingDay> findAllEmployeesBetweenDates(@RequestParam(value = "dateFrom", required = false) String dateFrom, 
+    		@RequestParam(value = "dateTo", required = false) String dateTo, 
+    		@RequestParam(value = "employeeId", required = false) Long employeeId) {
+    	return workingDayService.findAllEmployeesBetweenDates(dateTo, dateFrom, employeeId);
+    }
+    
     @PostMapping(value = "/")
     public void addNewWorkingDay(@RequestBody WorkingDay workingDay) {
         workingDayService.addNewOrUpdate(workingDay);
@@ -75,5 +93,34 @@ public class WorkingDayController {
     public void deleteWorkingDay(@PathVariable Long dayId) {
         workingDayService.delete(dayId);
     }
+    
+    //FOR MODEL AND VIEW
+
+    @GetMapping(value = "/searchform")
+    	public ModelAndView showSearchForm() {
+    	ModelAndView modelAndView = new ModelAndView();
+    	modelAndView.setViewName("search_form");
+    	return modelAndView;
+    }
+
+    @GetMapping(value = "/days/days_in_month/")
+    public ModelAndView getDaysForEmployee(@RequestParam(value = "date", required = false) String date,
+                                           @RequestParam(value = "employeeId", required = false) Long employeeId) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("days_employees");
+
+        var daysForEmployee = workingDayService.searchDaysForMonth(date, employeeId);
+        modelAndView.addObject("days_employees", daysForEmployee);
+
+        Employee employee = employeeRepository.findById(employeeId).get();
+        modelAndView.addObject("employee", employee);
+
+        var totalDays = daysForEmployee.size();
+        modelAndView.addObject("totalDays", totalDays);
+
+        return modelAndView;
+    }
+    
 
 }

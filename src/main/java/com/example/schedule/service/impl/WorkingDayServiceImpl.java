@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class WorkingDayServiceImpl implements WorkingDayService {
@@ -35,9 +34,20 @@ public class WorkingDayServiceImpl implements WorkingDayService {
         workingDay.setDate(workingDay.getDate());
         return workingDayRepository.saveAndFlush(workingDay);
     }
-
+    
     @Override
     public void delete(Long dayId) {
         workingDayRepository.deleteById(dayId);
     }
+    
+    @Override
+	public List<WorkingDay> searchDaysForMonth(String date, Long employeeId) {
+		return workingDayRepository.searchDaysForMonth(date, employeeId);
+	}
+	
+    @Override
+    public List<WorkingDay> findAllEmployeesBetweenDates(String dateTo, String dateFrom, Long employeeId) {
+    	return workingDayRepository.findAllEmployeesBetweenDates(dateTo, dateFrom, employeeId);
+    }
+    
 }

@@ -2,7 +2,6 @@ package com.example.schedule.model.repository;
 
 import com.example.schedule.model.entity.WorkingDay;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,10 +16,11 @@ public interface WorkingDayRepository extends JpaRepository<WorkingDay, Long> {
 			+ "employees_days e ON \r\n"
 			+ "w.day_id = e.day_id\r\n"
 			+ "WHERE w.date LIKE %:date% AND e.employee_id LIKE %:employeeId%", nativeQuery = true)
-	//@Query(value = "SELECT date, employee_id FROM schedule.working_day INNER JOIN \n" +
-			//"schedule.employees_days ON \n" +
-			//"schedule.working_day.day_id = schedule.employees_days.day_id\n" +
-			//"WHERE date LIKE '%2023-01%' AND employee_id = '1';", nativeQuery = true)
 	List<WorkingDay> searchDaysForMonth(@Param("date") String date, @Param("employeeId") Long employeeId);
-
+	
+	@Query(value = "SELECT * FROM working_day w INNER JOIN employees_days ed ON w.day_id = ed.day_id\n" +
+	        "WHERE w.date BETWEEN :dateFrom AND :dateTo AND ed.employee_id = :employeeId", nativeQuery = true)
+	List<WorkingDay> findAllEmployeesBetweenDates(@Param("dateTo")String dateTo, @Param("dateFrom")String dateFrom,
+			@Param("employeeId") Long employeeId);
+	
 }

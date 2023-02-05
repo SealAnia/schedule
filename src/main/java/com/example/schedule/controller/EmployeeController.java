@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -37,19 +36,19 @@ public class EmployeeController {
     public Employee findEmployeeById(@PathVariable Long employeeId) {
         return employeeService.getById(employeeId);
     }
-
+    
+    @GetMapping(value = "/name/{name}")
+    public Employee findEmployeeByName(@PathVariable String name) {
+    	return employeeService.findEmployeeByName(name);
+    }
+    
+    //RETURNS ALL DAYS WHEN A CERTAIN EMPLOYEE WAS WORKING
     @GetMapping(value = "/{employee_id}/working_days")
     public List<WorkingDay> getAllWorkingDaysForEmployee(@PathVariable Long employee_id) {
         var employee = employeeService.getById(employee_id);
         return employee.getWorkingDays();
     }
-
-    @GetMapping(value = "/days_in_month")
-    public List<WorkingDay> getDaysForEmployee2(@RequestParam(value = "date", required = false) String date,
-                                               @RequestParam(value = "employeeId", required = false) Long employeeId) {
-        return employeeService.countDays(date, employeeId);
-    }
-
+    
     @PostMapping(value = "/")
     public void addNewEmployee(@RequestBody Employee employee) {
         employeeService.addNewOrUpdate(employee);
@@ -93,31 +92,5 @@ public class EmployeeController {
 		modelAndView.addObject("days", workingDayService.getAll());
 		return modelAndView;
 	}
-    
-    @GetMapping(value = "/searchform")
-    	public ModelAndView showSearchForm() {
-    	ModelAndView modelAndView = new ModelAndView();
-    	modelAndView.setViewName("search_form");
-    	return modelAndView;
-    }
-
-    @GetMapping(value = "/employees/days_in_month/")
-    public ModelAndView getDaysForEmployee(@RequestParam(value = "date", required = false) String date,
-                                           @RequestParam(value = "employeeId", required = false) Long employeeId) {
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("days_employees");
-
-        var daysForEmployee = employeeService.countDays(date, employeeId);
-        modelAndView.addObject("days_employees", daysForEmployee);
-
-        Employee employee = employeeService.getById(employeeId);
-        modelAndView.addObject("employee", employee);
-
-        var totalDays = daysForEmployee.size();
-        modelAndView.addObject("totalDays", totalDays);
-
-        return modelAndView;
-    }
     
 }
