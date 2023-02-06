@@ -58,6 +58,11 @@ public class WorkingDayController {
     		@RequestParam(value = "employeeId", required = false) Long employeeId) {
     	return workingDayService.findAllEmployeesBetweenDates(dateTo, dateFrom, employeeId);
     }
+
+    @GetMapping(value = "/future")
+    public List<WorkingDay> findFutureDays() {
+        return workingDayService.findFutureDays();
+    }
     
     @PostMapping(value = "/")
     public void addNewWorkingDay(@RequestBody WorkingDay workingDay) {

@@ -49,5 +49,10 @@ public class WorkingDayServiceImpl implements WorkingDayService {
     public List<WorkingDay> findAllEmployeesBetweenDates(String dateTo, String dateFrom, Long employeeId) {
     	return workingDayRepository.findAllEmployeesBetweenDates(dateTo, dateFrom, employeeId);
     }
+
+    @Override
+    public List<WorkingDay> findFutureDays() {
+        return workingDayRepository.findFutureDays();
+    }
     
 }

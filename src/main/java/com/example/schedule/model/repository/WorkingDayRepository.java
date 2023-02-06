@@ -22,5 +22,11 @@ public interface WorkingDayRepository extends JpaRepository<WorkingDay, Long> {
 	        "WHERE w.date BETWEEN :dateFrom AND :dateTo AND ed.employee_id = :employeeId", nativeQuery = true)
 	List<WorkingDay> findAllEmployeesBetweenDates(@Param("dateTo")String dateTo, @Param("dateFrom")String dateFrom,
 			@Param("employeeId") Long employeeId);
+
+	//@Query(value = "SELECT * FROM working_day w WHERE w.date >= CURDATE()", nativeQuery = true)
+	@Query(value = "SELECT w.day_id, w.date, e.name FROM working_day w " +
+			"LEFT JOIN employees_days ed ON w.day_id = ed.day_id " +
+			"LEFT JOIN employee e ON ed.employee_id = e.employee_id WHERE w.date >= CURDATE()", nativeQuery = true)
+	List<WorkingDay> findFutureDays();
 	
 }

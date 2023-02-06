@@ -8,5 +8,6 @@ public interface WorkingDayService extends DefaultService<WorkingDay> {
 	
 	List<WorkingDay> searchDaysForMonth(String date, Long employeeId);
 	List<WorkingDay> findAllEmployeesBetweenDates(String dateTo, String dateFrom, Long employeeId);
+	List<WorkingDay> findFutureDays();
 	
 }
